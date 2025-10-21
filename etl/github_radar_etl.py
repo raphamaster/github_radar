@@ -1,10 +1,22 @@
-# github_radar_etl.py
+
 import os, csv, time, sys
 from datetime import datetime, timedelta
 import requests
+from pathlib import Path
+from dotenv import load_dotenv
+
+# === Paths base ===
+THIS = Path(__file__).resolve()
+ROOT = THIS.parents[1]                  # raiz do repo
+OUT_DIR = ROOT / "out"                  # saída unificada
+OUT_DIR.mkdir(parents=True, exist_ok=True)
+
+# .env na raiz
+load_dotenv(ROOT / ".env")
+
 
 # ===== CONFIG =====
-INPUT_CSV = "repo_list.csv"
+INPUT_CSV = OUT_DIR / "repo_list.csv"
 OUT_DIR = "out"
 DAYS_COMMITS = 30      # janela de commits
 DAYS_ISSUES  = 60      # janela de issues fechadas

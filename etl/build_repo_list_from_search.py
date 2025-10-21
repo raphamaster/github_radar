@@ -1,24 +1,46 @@
+
 import os, csv, time
 from datetime import datetime, timedelta
 import requests
+from pathlib import Path
+from dotenv import load_dotenv
+
+# === Paths base ===
+THIS = Path(__file__).resolve()
+ROOT = THIS.parents[1]             # raiz do repo (…/github_radar)
+OUT_DIR = ROOT / "out"             # pasta de saída no root
+OUT_DIR.mkdir(parents=True, exist_ok=True)
+
+# .env na raiz
+load_dotenv(ROOT / ".env")
+
+# arquivos de saída
+OUT_LIST = OUT_DIR / "repo_list.csv"
+OUT_CATALOG = OUT_DIR / "repo_catalog.csv"
+
+# token
+TOKEN = os.getenv("GITHUB_TOKEN")
+if not TOKEN:
+    raise SystemExit("Defina GITHUB_TOKEN no .env (ou no ambiente).")
 
 # =========================
 # CONFIG
 # =========================
-# Termos/temas para buscar (pode ajustar livremente):
+# Termos/temas para buscar:
 QUERIES = [
     'data engineering',               # amplo
     'ETL OR ELT',                     # pipelines
     'airflow OR "apache airflow"',    # orquestração
+    'n8n',                            # orquestração
     'dbt OR "dbt-core"',              # transformação
     'duckdb',                         # query engine moderna
     '"great expectations" OR "data quality"',  # qualidade de dados
     'kafka OR "apache kafka"',        # streaming
-    'delta lake OR "delta-io"',       # lakehouse
+    'delta lake OR "delta-io"',       # lakehouse    
 ]
 
 # linguagens/qualificadores adicionais (opcionais)
-LANG = 'language:Python'   # troque/adicione: language:SQL, language:Go, etc.
+LANG = 'language:Python, language:SQL, language:Go, language:Scala'   # troque/adicione: language:SQL, language:Go, etc.
 EXTRA_QUALS = 'fork:false' # descarta forks no resultado da busca
 
 STARS_MIN = 100            # estrelas mínimas
@@ -26,8 +48,8 @@ PUSHED_SINCE_DAYS = 180    # atividade recente (últimos N dias)
 PER_PAGE = 100             # máximo por página
 MAX_PAGES = 2              # até 200 por query (ajuste se quiser)
 
-OUT_LIST = 'repo_list.csv'     # lista mínima pro ETL
-OUT_CATALOG = 'repo_catalog.csv'  # catálogo com metadados
+OUT_LIST    = 'out/repo_list.csv'     # lista mínima pro ETL
+OUT_CATALOG = 'out/repo_catalog.csv'  # catálogo com metadados
 
 # =========================
 # SETUP
