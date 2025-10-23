@@ -1,8 +1,8 @@
 # Power BI
-*.pbix
+#*.pbix
 # se quiser manter alguns pbix em releases, eles não entram no commit do dia a dia
 # templates
-!*.pbit
+#!*.pbit
 
 # Dados gerados
 out/
